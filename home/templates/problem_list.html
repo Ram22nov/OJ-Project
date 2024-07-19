@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %} Practice {% endblock title %}
+{% block body %}
+<div style="background-color: lightgrey; padding: 20px;">
+<h1>Problem List</h1>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col">Sr No.</th>
+            <th scope="col">Problem Name</th>
+            <th scope="col">Difficulty</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for problem in problems %}
+            <tr>
+                <th scope="row">{{ forloop.counter }}</th>
+                <td><a href="{% url 'problem_detail' problem.id %}">{{ problem.title }}</a></td>
+                <td>{{ problem.difficulty }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+{% endblock body %}
+
+ 
