@@ -2,9 +2,9 @@ from django import forms
 from compiler.models import CodeSubmission
 
 LANGUAGE_CHOICES = [
+    ("cpp", "C++"),
     ("py", "Python"),
     ("c", "C"),
-    ("cpp", "C++"),
 ]
 
 

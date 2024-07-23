@@ -1,5 +1,10 @@
 from django.contrib import admin
 from .models import Problem
 
-admin.site.register(Problem)
-# Register your models here.
+
+
+class ProblemAdmin(admin.ModelAdmin):
+    list_display = ('title', 'difficulty')
+    fields = ('title', 'description', 'difficulty', 'input_data', 'expected_output')
+
+admin.site.register(Problem, ProblemAdmin)

@@ -41,7 +41,10 @@ INSTALLED_APPS = [
     'accounts',
     'home',
     'compiler',
+   
 ]
+
+CRISPY_TEMPLATES_PACK = 'bootstrap4'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -114,6 +117,10 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
+
+#added manually
+
+#added manually
 
 
 # Static files (CSS, JavaScript, Images)

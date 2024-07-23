@@ -28,7 +28,6 @@ def submit(request):
         form = CodeSubmissionForm()
     return render(request, "index1.html", {"form": form})
 
-
 def run_code(language, code, input_data):
     app_path = Path(settings.BASE_DIR) / 'compiler'
     directories = ["codes", "inputs", "outputs"]
@@ -36,7 +35,6 @@ def run_code(language, code, input_data):
     for directory in directories:
         dir_path = app_path / directory
         if not dir_path.exists():
-            print(f"Creating directory: {dir_path}")
             dir_path.mkdir(parents=True, exist_ok=True)
 
     codes_dir = app_path / "codes"
@@ -62,10 +60,6 @@ def run_code(language, code, input_data):
     with open(output_file_path, "w") as output_file:
         pass  # This will create an empty file
 
-    print(f"Language: {language}")
-    print(f"Code: {code}")
-    print(f"Input Data: {input_data}")
-
     if language == "cpp":
         executable_path = codes_dir / unique
         compile_result = subprocess.run(
@@ -80,19 +74,16 @@ def run_code(language, code, input_data):
                         stdout=output_file,
                     )
     elif language == "py":
-        print(f"Running Python code with input:\n{input_data}")
         with open(input_file_path, "r") as input_file:
             with open(output_file_path, "w") as output_file:
                 subprocess.run(
                     ["python", str(code_file_path)],
                     stdin=input_file,
                     stdout=output_file,
-                    text=True
                 )
 
     # Read the output from the output file
     with open(output_file_path, "r") as output_file:
         output_data = output_file.read()
+    return output_data.strip()
 
-    print(f"Output Data: {output_data}")
-    return output_data
