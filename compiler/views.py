@@ -9,7 +9,7 @@ import os
 import uuid
 import subprocess
 from pathlib import Path
-
+import sys
 
 def submit(request):
     if request.method == "POST":
@@ -53,9 +53,11 @@ def run_code(language, code, input_data):
 
     with open(code_file_path, "w") as code_file:
         code_file.write(code)
+    
+    formatted_input_data = input_data.strip().replace('\r\n', '\n').replace('\r', '\n')
 
     with open(input_file_path, "w") as input_file:
-        input_file.write(input_data)
+        input_file.write(formatted_input_data)
 
     with open(output_file_path, "w") as output_file:
         pass  # This will create an empty file
@@ -73,17 +75,37 @@ def run_code(language, code, input_data):
                         stdin=input_file,
                         stdout=output_file,
                     )
+    
+    elif language == "c":
+        executable_path = codes_dir / unique
+        compile_result = subprocess.run(
+            ["gcc", str(code_file_path), "-o", str(executable_path)]
+        )
+        if compile_result.returncode == 0:
+            with open(input_file_path, "r") as input_file:
+                with open(output_file_path, "w") as output_file:
+                    subprocess.run(
+                        [sys.executable, str(executable_path)],
+                        stdin=input_file,
+                        stdout=output_file,
+                    )
+   
     elif language == "py":
+        # Code for executing Python script
         with open(input_file_path, "r") as input_file:
             with open(output_file_path, "w") as output_file:
                 subprocess.run(
-                    ["python", str(code_file_path)],
+                    [sys.executable, str(code_file_path)],  # Using sys.executable
                     stdin=input_file,
                     stdout=output_file,
                 )
-
+    
     # Read the output from the output file
     with open(output_file_path, "r") as output_file:
         output_data = output_file.read()
+        
+    # Debugging: Print contents for checking
+    print(f"Input File Content: {formatted_input_data}")
+    print(f"Output File Content: {output_data}")
     return output_data.strip()
 

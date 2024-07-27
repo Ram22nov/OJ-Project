@@ -19,11 +19,17 @@ from django.urls import path, include
 admin.site.site_header = 'CodeExp Admin'
 admin.site.site_title = 'CodeExp Admin Portal'
 admin.site.site_title = 'Welcome to CodeExp'
+from home import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("auth/", include("accounts.urls")),
-    path("", include("home.urls")),
+    path("", include("accounts.urls")),
     path("home/", include("home.urls")),
     path("compiler/", include("compiler.urls")),
+    path("profile/",views.profile,name='profile'),
+    path('practice/', views.problem_list, name='problem_list'),
+    path('practice/<int:problem_id>/', views.problem_detail, name='problem_detail'),
+    path('feedback/', views.feedback, name='feedback'),
+    path('feedback/success/', views.feedback_success, name='feedback_success'),
 ]

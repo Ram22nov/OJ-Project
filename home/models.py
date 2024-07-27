@@ -10,4 +10,11 @@ class Problem(models.Model):
     
     def __str__(self):
         return self.title
+ 
+class Feedback(models.Model):
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    feedback_text = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
 
+    def __str__(self):
+        return f"Feedback from {self.user.username if self.user else 'Anonymous'}"

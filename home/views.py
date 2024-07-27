@@ -1,21 +1,17 @@
 from django.shortcuts import render, HttpResponse, get_object_or_404, redirect
-
+from django.http import HttpResponseRedirect
 #added
 from home.models import Problem
 from compiler.forms import CodeSubmissionForm
 from compiler.views import run_code
 
-
+from .models import Feedback
+from django.contrib.auth.models import User
+from .forms import FeedbackForm
 
 def problem_list(request):
     problems = Problem.objects.all()
     return render(request, 'problem_list.html', {'problems': problems})
-
-# views.py in your home app
-from django.shortcuts import render, get_object_or_404
-from home.models import Problem
-from compiler.forms import CodeSubmissionForm
-from compiler.views import run_code
 
 def problem_detail(request, problem_id):
     problem = get_object_or_404(Problem, id=problem_id)
@@ -69,21 +65,30 @@ def problem_detail(request, problem_id):
 
 
 
-#def practice(request):
- #  return render(request,'practice.html')
-
-def contest(request):
-    return render(request,'contest.html')
-    #return HttpResponse("this is contest page")
-     
-
-
-
 def profile(request):
-    return HttpResponse("this is profile page")
-    
-
+    return HttpResponse("This is profile page")
 # Create your views here.
+
 def index(request):
     return render(request,'index.html')
 
+def feedback_success(request):
+    return render(request, 'home/feedback_success.html')
+
+
+def feedback(request):
+    if request.method == 'POST':
+        form = FeedbackForm(request.POST)
+        if form.is_valid():
+            feedback_instance = form.save(commit=False)
+            # If the user is authenticated, set the user; otherwise, leave it as None or handle it as needed
+            if request.user.is_authenticated:
+                feedback_instance.user = request.user
+            else:
+                feedback_instance.user = None  # or any other logic if required
+            feedback_instance.save()
+            return HttpResponseRedirect('/home/feedback/')
+    else:
+        form = FeedbackForm()
+
+    return render(request, 'home/feedback.html', {'form': form})

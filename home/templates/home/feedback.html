@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block title %}Feedback{% endblock title %}
+{% block body %}
+<div class="container mt-4">
+    <h1>Feedback Form</h1>
+    <form method="post" action="{% url 'feedback' %}">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Submit Feedback</button>
+    </form>
+</div>
+{% endblock body %}
